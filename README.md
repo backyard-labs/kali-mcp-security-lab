@@ -18,7 +18,7 @@ The goal is not simply to deploy an MCP server. It is to learn how to design, te
 
 By completing the lab, you will practice:
 
-- How MCP connects an AI client to external tools
+- How MCP Inspector acts as a test client to discover, invoke, and validate tools exposed by an MCP server
 - Why tool design is part of an AI system's security boundary
 - Allowlisting versus trying to block every unsafe option
 - Network-scope validation with Python's `ipaddress` module
@@ -46,7 +46,7 @@ It intentionally does **not** provide arbitrary commands, custom Nmap options, s
 
 ```mermaid
 flowchart TD
-    A["MCP client or Inspector"] --> B["Kali MCP server"]
+    A["Authorized Security Lab Network (OPNsense-managed 10.10.10.0/24)"] --> B["Kali MCP server"]
     B --> C{"Policy checks"}
     C -->|Rejected| D["Structured denial + audit event"]
     C -->|Authorized| E["Fixed Nmap command"]
