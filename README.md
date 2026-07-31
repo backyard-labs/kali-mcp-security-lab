@@ -101,6 +101,7 @@ Use this project only on systems you own or are explicitly authorized to test.
 ├── test_audit_logging.py           # Isolated audit-behavior tests
 ├── test_mcp_integration.py         # MCP protocol integration tests
 ├── docs/
+│   ├── deployment-guide.md         # Installation and core MCP validation
 │   ├── goose-ollama-integration.md # Goose and Ollama setup and validation
 │   ├── learning-journey.md         # Build milestones and reasoning
 │   └── troubleshooting.md          # Inspector/browser diagnosis
@@ -113,6 +114,8 @@ The repository supports two learning paths:
 
 1. **Core path:** Install the server, run the automated tests, and validate all four tools directly with MCP Inspector.
 2. **Optional advanced path:** Connect Goose as an AI-enabled MCP client backed by a local Ollama model.
+
+See the [Deployment Guide](docs/deployment-guide.md) for complete Kali installation, testing, MCP Inspector validation, audit review, and shutdown instructions.
 
 The core path teaches the MCP protocol and security boundary without requiring an AI agent. The optional path demonstrates that conversational tool selection remains subject to the same server-side controls.
 
