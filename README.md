@@ -1,6 +1,6 @@
 # Kali MCP Security Lab
 
-A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that lets an AI client use selected Kali Linux and Nmap capabilities inside an authorized lab network.
+A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities to MCP Inspector inside an authorized security lab network.
 
 ## Why We Built This
 
@@ -8,7 +8,7 @@ Connecting an AI assistant to Kali Linux is easy to imagine and dangerous to imp
 
 This project started with a more useful question:
 
-> How can an AI client use real security tools while the server—not the prompt—enforces exactly what is permitted?
+> How can an MCP server expose real security tools while enforcing exactly which targets and operations are permitted?
 
 The answer is a deliberately narrow MCP server. It exposes useful lab operations, but it never accepts arbitrary shell commands or user-controlled Nmap flags. The authorized network, tool behavior, port list, timeouts, and audit trail are enforced in code.
 
@@ -18,7 +18,7 @@ The goal is not simply to deploy an MCP server. It is to learn how to design, te
 
 By completing the lab, you will practice:
 
-- How MCP connects an AI client to external tools
+- Using MCP Inspector to validate tools end to end
 - Why tool design is part of an AI system's security boundary
 - Allowlisting versus trying to block every unsafe option
 - Network-scope validation with Python's `ipaddress` module
@@ -46,12 +46,14 @@ It intentionally does **not** provide arbitrary commands, custom Nmap options, s
 
 ```mermaid
 flowchart TD
-    A["MCP client or Inspector"] --> B["Kali MCP server"]
-    B --> C{"Policy checks"}
-    C -->|Rejected| D["Structured denial + audit event"]
-    C -->|Authorized| E["Fixed Nmap command"]
-    E --> F["OPNsense lab: 10.10.10.0/24"]
-    E --> G["Structured result + JSONL audit"]
+    A["MCP Inspector<br/>(test client)"] --> B["Kali MCP server"]
+    B --> C{"Server-side policy checks"}
+    C -->|Rejected| D["Structured denial"]
+    C -->|Authorized| E["Fixed Nmap execution"]
+    E --> F["Authorized Security Lab Network<br/>(OPNsense-managed 10.10.10.0/24)"]
+    D --> G["Structured response + JSONL audit"]
+    E --> G
+    G --> A
 ```
 
 The critical design decision is that the MCP server is the enforcement point. Natural-language instructions can guide the model, but only server-side controls determine what actually runs.
@@ -66,7 +68,7 @@ The implementation enforces these boundaries:
 - Network and broadcast addresses are rejected as scan targets.
 - Nmap is called by absolute path with a fixed argument list.
 - No shell is invoked and no user-supplied command options are accepted.
-- Discovery and scanning use fixed retry and timeout limits.
+- Discovery and scanning use a fixed 120-second execution timeout.
 - Port results outside the allowlist are treated as invalid.
 - Every policy check or operational call produces a structured audit event.
 - Audit-write failure does not weaken policy enforcement or crash a safe operation.
@@ -104,9 +106,10 @@ Check the main system dependencies:
 ```bash
 python3 --version
 nmap --version
+jq --version
 ```
 
-`python3 --version` confirms Python is installed. `nmap --version` verifies that the scanner used by the bounded tools is available.
+`python3 --version confirms Python is installed. nmap --version verifies that the scanner used by the bounded tools is available. jq --version confirms that the JSON-processing utility used by the audit-review examples is installed.
 
 ## Installation
 
