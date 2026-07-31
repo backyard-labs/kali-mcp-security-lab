@@ -1,0 +1,115 @@
+name: Feature request
+description: Propose a narrowly constrained improvement consistent with the project's educational purpose
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposed features must preserve the server-side authorization boundary and constrained-authority design.
+
+        Requests for a general shell bridge, arbitrary Nmap arguments, exploitation, credential attacks, destructive actions, persistence, or unauthorized target expansion are outside this project's scope.
+
+        Do not disclose suspected vulnerabilities here. Follow [SECURITY.md](../../SECURITY.md) for private vulnerability reporting.
+
+  - type: checkboxes
+    id: preliminary-checks
+    attributes:
+      label: Preliminary checks
+      options:
+        - label: I searched existing issues and did not find a matching request.
+          required: true
+        - label: This request does not disclose a suspected security vulnerability.
+          required: true
+        - label: This request does not introduce general shell access or arbitrary command execution.
+          required: true
+        - label: This request is intended only for authorized and isolated security-lab use.
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature category
+      options:
+        - Safety or authorization control
+        - Target validation
+        - Constrained tool behavior
+        - Structured output or error handling
+        - Audit reliability or integrity
+        - Dry-run or diagnostic behavior
+        - Automated testing
+        - MCP client integration
+        - Dependency or development workflow
+        - Documentation
+        - Another narrowly constrained improvement
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or learning need
+      description: Explain the problem the feature would solve or the educational value it would provide.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-behavior
+    attributes:
+      label: Proposed behavior
+      description: Describe the feature and its intended behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: security-boundary
+    attributes:
+      label: Server-side enforcement
+      description: Explain how the server would constrain inputs, targets, commands, outputs, and authority.
+      placeholder: |
+        Accepted inputs:
+        Rejected inputs:
+        Fixed server-controlled behavior:
+        Authorization checks:
+        Failure behavior:
+    validations:
+      required: true
+
+  - type: textarea
+    id: security-impact
+    attributes:
+      label: Security impact and abuse cases
+      description: Identify possible misuse, boundary bypasses, data exposure, or authority expansion and how they would be prevented.
+    validations:
+      required: true
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Proposed validation
+      description: Describe the automated and manual tests that should demonstrate both allowed and rejected behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any safer, simpler, or narrower alternatives you considered.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to help implement or test this feature.
+          required: false
+
+  - type: checkboxes
+    id: conduct
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct.
+          required: true
