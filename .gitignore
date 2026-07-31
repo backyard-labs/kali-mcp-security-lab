@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+kali_lab_audit.jsonl
+mcp-inspector.log
+
+checkpoints/
+*.working
+*.backup
+*.before-*
+*.after-*
+
+.idea/
+.vscode/
+.DS_Store
