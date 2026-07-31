@@ -1,5 +1,7 @@
 > [!IMPORTANT]
 > **Project status: Experimental educational lab**
+>
+> This repository is a learning project and is not production-ready.
 
 # Kali MCP Security Lab
 
