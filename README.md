@@ -3,9 +3,9 @@
 > [!IMPORTANT]
 > **Project status: Experimental educational lab**
 >
-> This repository is a learning project and is not production-ready. It has been validated only in the documented isolated lab environment. Do not deploy it on production networks or use it against systems you do not own or have explicit authorization to test.
+> This repository is a learning project and is not production-ready. The core MCP server has been validated only in the documented isolated lab environment. Do not deploy it on deploy production networks or use it against systems you do not own or have explicit authorization to test.
 
-A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network. The server was validated directly with MCP Inspector and through Goose as an AI-enabled MCP client backed by a local Ollama model.
+A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network. The server was validated directly with MCP Inspector. An optional Goose and Oll validated directly with MCP Inspector. An optional Goose andama integration path is documented but has not yet been independently reproduced.
 
 ## Why We Built This
 
@@ -24,7 +24,7 @@ The goal is not simply to deploy an MCP server. It is to learn how to design, te
 By completing the lab, you will practice:
 
 - How MCP Inspector acts as a test client to discover, invoke, and validate tools exposed by an MCP server
-- How an Ollama-backed Goose agent connects to an MCP server and uses its safety-constrained tools
+- How to configure an Ollama-backed Goose agent to connect to the MCP server
 - Why tool design is part of an AI system's security boundary
 - Allowlisting versus trying to block every unsafe option
 - Network-scope validation with Python's `ipaddress` module
@@ -64,10 +64,10 @@ flowchart TD
     H --> B
 ```
 
-The two client paths serve different purposes:
+The two documented client paths serve different purposes:
 
 - MCP Inspector provides direct inspection and testing of MCP tool schemas, arguments, responses, and protocol behavior.
-- Goose provides an AI-enabled MCP client that can interpret a conversational request and select an appropriate exposed tool.
+- Goose provides an optional AI-enabled MCP client that can interpret a conversational request and select an appropriate exposed tool.
 - Ollama supplies the local language model used by Goose. Ollama itself is not the MCP client.
 
 The critical design decision is that the MCP server is the enforcement point. Natural-language instructions can guide an agent, but only server-side controls determine what actually runs.
@@ -85,7 +85,7 @@ The implementation enforces these boundaries:
 - Discovery and scanning use a fixed 120-second execution timeout.
 - Port results outside the allowlist are treated as invalid.
 - The server attempts to record every policy check and operational call as a structured JSONL audit event.
-- In the current experimental implementation, an audit-write failure does not interrupt tool operation or weaken the separately enforced target and command restrictions.
+- In the current experimental implementation, an audit-write an failure does not interrupt tool operation or weaken the separately enforced target and command restrictions.
 - MCP clients and language models cannot alter the authorized subnet, fixed commands, port allowlist, timeout, or audit behavior.
 
 The server currently uses local standard input/output (`stdio`) transport. It does not independently authenticate the MCP client; access is governed by which local processes and users are permitted to start and communicate with the server. Authentication and multi-user remote access are outside the scope of this educational version.
@@ -113,15 +113,15 @@ Use this project only on systems you own or are explicitly authorized to test.
 The repository supports two learning paths:
 
 1. **Core path:** Install the server, run the automated tests, and validate all four tools directly with MCP Inspector.
-2. **Optional advanced path:** Connect Goose as an AI-enabled MCP client backed by a local Ollama model.
+2. **Optional advanced path:** Configure Goose as an AI-enabled MCP client backed by a local Ollama model, then perform and record the staged validation sequence.
 
 See the [Deployment Guide](docs/deployment-guide.md) for complete Kali installation, testing, MCP Inspector validation, audit review, and shutdown instructions.
 
-The core path teaches the MCP protocol and security boundary without requiring an AI agent. The optional path demonstrates that conversational tool selection remains subject to the same server-side controls.
+The core path teaches the MCP protocol and security boundary without requiring an AI agent. The optional path is designed to demonstrate that conversational tool selection remains subject to the same server-side controls.
 
 The documentation focuses on the security decisions, data flow, and important implementation patterns rather than explaining every Python statement individually. A guided code walkthrough will connect the major functions to the controls and tests that verify them.
 
-The repository documents both validated client paths. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the current AI-enabled client architecture, configuration requirements, validation, audit-review, and troubleshooting guidance. Exact installation and environment-specific configuration details that still require confirmation are explicitly identified in the guide.
+The repository documents the validated MCP Inspector path and an optional Goose and Ollama integration procedure. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for its architecture, installation, staged validation, audit review, and troubleshooting guidance.
 
 ## Prerequisites
 
@@ -207,7 +207,7 @@ The tests cover:
 
 No live network scan is required for the automated suite; operational execution is mocked where appropriate.
 
-The 36 automated tests validate the Python implementation and MCP protocol behavior. The Goose and Ollama workflow was validated separately as a manual end-to-end integration.
+The 36 automated tests validate the Python implementation and MCP protocol behavior. The automated tests do not validate the external Goose and Ollama integration.
 
 ## Use MCP Inspector
 
@@ -232,9 +232,9 @@ Stop Inspector with `Ctrl+C`. That ends the Inspector and MCP server processes a
 
 ## Use the Server With Goose and Ollama
 
-The current experimental milestone was also validated with Goose acting as the AI-enabled MCP client and a local Ollama model providing language-model inference.
+An optional advanced workflow uses Goose as the AI-enabled MCP client and Ollama for local language-model inference.
 
-The integration path was:
+The intended integration path is:
 
 ```text
 Ollama local model
@@ -242,7 +242,7 @@ Ollama local model
   -> Kali MCP server
   -> server-side policy enforcement
   -> constrained Nmap tools
-  -> structured result and JSONL audit event when audit storage is available
+  -> structured result and JSONL audit attempt
 ```
 
 MCP Inspector and Goose serve different purposes:
@@ -253,7 +253,7 @@ MCP Inspector and Goose serve different purposes:
 
 The MCP server remains the security-enforcement point. Goose and the model can request tool use, but they cannot change the authorized subnet, fixed Nmap commands, port allowlist, timeout, or audit behavior.
 
-The Goose and Ollama integration was documented but not yet independently reproduced. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the current architecture, configuration requirements, validation, audit-review, and troubleshooting guidance. Exact installation and environment-specific configuration details that still require confirmation are explicitly identified in the guide.
+This integration is documented but has not yet been independently reproduced. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the complete procedure. Record the actual versions, configuration values, and test results when performing the validation.
 
 ## Review the Audit Trail
 
@@ -283,11 +283,9 @@ When an event is successfully written, it records the UTC timestamp, MCP tool, t
 
 In the current experimental implementation, an audit-storage failure does not stop tool execution. This fail-open audit behavior is a documented limitation and would need to be redesigned for production use where guaranteed accountability is required.
 
-## Validated End-to-End Results
+## Validation Status
 
-The current experimental milestone validated two complementary client paths.
-
-Direct MCP validation:
+The current experimental milestone validated the direct MCP Inspector path:
 
 ```text
 MCP Inspector
@@ -298,21 +296,11 @@ MCP Inspector
   -> JSONL audit event when audit storage is available
 ```
 
-AI-enabled client validation:
+MCP Inspector was used to inspect and invoke the tools directly.
 
-```text
-Ollama local model
-  -> Goose AI agent and MCP client
-  -> Kali MCP server
-  -> server-side scope validation
-  -> constrained tool execution
-  -> structured result
-  -> JSONL audit event when audit storage is available
-```
+During direct MCP Inspector validation, a controlled common-port scan of example host `10.10.10.101` tested the fixed 14-port allowlist. Learners must use an authorized target that actually exists in their own isolated `10.10.10.0/24` lab. The result and exact enforced command were recorded in the operational audit log during validation.
 
-MCP Inspector was used to inspect and invoke the tools directly. Goose demonstrated that an AI-enabled client could access the same tools while remaining subject to the server's fixed security controls.
-
-In the validated lab environment, a controlled common-port scan of example host `10.10.10.101` successfully tested the fixed 14-port allowlist. Learners must use an authorized target that actually exists in their own isolated `10.10.10.0/24` lab. The result and exact enforced command were recorded in the operational audit log during validation.
+The Goose and Ollama end-to-end path is documented but remains pending reproduction and recorded validation. Until that sequence succeeds, it must not be described as a validated client path.
 
 ## The Most Useful Troubleshooting Lesson
 
@@ -330,13 +318,13 @@ See [Troubleshooting MCP Inspector](docs/troubleshooting.md) for the diagnostic 
 
 ## Where to Go Next
 
-Treat this repository as an experimental implementation of a controlled tool boundary. The MCP server has been validated directly with MCP Inspector and through an Ollama-backed Goose agent. Possible extensions include:
+Treat this repository as an experimental implementation of a controlled tool boundary. The MCP server has been validated directly with MCP Inspector. The documented Goose and Ollama path remains pending end-to-end reproduction. Possible extensions include:
 
 - Make the authorized subnet configurable through a validated environment variable.
 - Add log rotation and integrity protection.
 - Add a dry-run mode that returns the fixed command without executing it.
 - Reproduce and record the complete Goose and Ollama validation sequence using the integration guide.
-- Expand the validated Goose and Ollama integration with additional safety-constrained workflows.
+- After successful reproduction, evaluate additional safety-constrained Goose workflows.
 - Add new tools only when each can be expressed as a narrow schema with an explicit allowlist.
 
 Avoid turning the project into a general shell bridge. Its educational value comes from keeping authority narrow, visible, testable, and auditable.
