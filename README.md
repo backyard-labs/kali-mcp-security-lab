@@ -89,13 +89,14 @@ Use this project only on systems you own or are explicitly authorized to test.
 
 ```text
 .
-├── kali_lab_server.py          # MCP tools and safety enforcement
-├── test_kali_lab_server.py     # Unit tests for policy, parsing, and execution
-├── test_audit_logging.py       # Isolated audit-behavior tests
-├── test_mcp_integration.py     # MCP protocol integration tests
+├── kali_lab_server.py              # MCP tools and safety enforcement
+├── test_kali_lab_server.py         # Unit tests for policy, parsing, and execution
+├── test_audit_logging.py           # Isolated audit-behavior tests
+├── test_mcp_integration.py         # MCP protocol integration tests
 ├── docs/
-│   ├── learning-journey.md     # Build milestones and reasoning
-│   └── troubleshooting.md      # Inspector/browser diagnosis
+│   ├── goose-ollama-integration.md # Goose and Ollama setup and validation
+│   ├── learning-journey.md         # Build milestones and reasoning
+│   └── troubleshooting.md          # Inspector/browser diagnosis
 ├── requirements.txt
 ├── .gitignore
 └── LICENSE
@@ -103,7 +104,7 @@ Use this project only on systems you own or are explicitly authorized to test.
 
 The documentation explains the system's behavior and design. It deliberately avoids a line-by-line explanation of the Python files so the learning path stays focused.
 
-The repository currently documents the MCP server and Inspector workflow in detail. The Goose and Ollama integration was validated manually, but its exact configuration and launch procedure are not yet included as a reproducible setup guide.
+The repository documents both validated client paths. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the AI-enabled client architecture, configuration, validation, audit-review, and troubleshooting workflow. Details that still require confirmation are explicitly identified in the guide.
 
 ## Prerequisites
 
@@ -235,7 +236,7 @@ MCP Inspector and Goose serve different purposes:
 
 The MCP server remains the security-enforcement point. Goose and the model can request tool use, but they cannot change the authorized subnet, fixed Nmap commands, port allowlist, timeout, or audit behavior.
 
-The Goose and Ollama integration was validated manually. Exact installation, configuration, and launch commands will be documented separately after the validated settings have been recovered and verified. This README does not provide unverified configuration examples.
+The Goose and Ollama integration was validated manually. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the installation, configuration, validation, audit-review, and troubleshooting workflow. Any configuration details that still require confirmation are explicitly identified in the guide.
 
 ## Review the Audit Trail
 
@@ -315,7 +316,7 @@ Treat this repository as version 1 of a controlled tool boundary. The MCP server
 - Make the authorized subnet configurable through a validated environment variable.
 - Add log rotation and integrity protection.
 - Add a dry-run mode that returns the fixed command without executing it.
-- Add a reproducible Goose and Ollama integration guide using the exact validated configuration.
+- Complete the Goose and Ollama integration guide by verifying the remaining environment-specific configuration details.
 - Expand the validated Goose and Ollama integration with additional safety-constrained workflows.
 - Add new tools only when each can be expressed as a narrow schema with an explicit allowlist.
 
