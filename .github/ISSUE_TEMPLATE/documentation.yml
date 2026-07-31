@@ -1,0 +1,107 @@
+name: Documentation improvement
+description: Report inaccurate, incomplete, outdated, or unclear documentation
+title: "[Docs]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public documentation corrections and improvements.
+
+        Do not disclose vulnerabilities, credentials, private host details, operational audit records, or other sensitive information. Suspected vulnerabilities must be reported privately according to [SECURITY.md](../../SECURITY.md).
+
+  - type: checkboxes
+    id: preliminary-checks
+    attributes:
+      label: Preliminary checks
+      options:
+        - label: I searched the existing issues and did not find a matching documentation report.
+          required: true
+        - label: This report does not disclose a suspected security vulnerability.
+          required: true
+        - label: I removed private or sensitive information.
+          required: true
+
+  - type: dropdown
+    id: document
+    attributes:
+      label: Affected documentation
+      options:
+        - README
+        - Security policy
+        - Contribution guidelines
+        - Code of Conduct
+        - Deployment Guide
+        - Goose and Ollama Integration
+        - Learning Journey
+        - Troubleshooting Guide
+        - Code comments or docstrings
+        - Repository structure or links
+        - Another document
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: File and section
+      description: Identify the file, heading, link, or approximate location.
+      placeholder: "Example: docs/deployment-guide.md — Run the Automated Tests"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem-type
+    attributes:
+      label: Type of documentation problem
+      options:
+        - Incorrect information
+        - Missing information
+        - Unclear explanation
+        - Outdated instruction
+        - Broken link
+        - Inconsistent terminology
+        - Unsupported validation claim
+        - Copy or formatting error
+        - Suggested new documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: Current content or problem
+      description: Quote a short relevant excerpt or clearly describe what is wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed improvement
+      description: Explain the correction or provide suggested replacement wording.
+    validations:
+      required: true
+
+  - type: textarea
+    id: supporting-context
+    attributes:
+      label: Supporting context
+      description: Include safe references, test results, or reasoning supporting the proposed change.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: accuracy
+    attributes:
+      label: Accuracy acknowledgement
+      options:
+        - label: I have distinguished verified behavior from proposed, planned, or unreproduced behavior.
+          required: true
+
+  - type: checkboxes
+    id: conduct
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct.
+          required: true
