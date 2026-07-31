@@ -3,9 +3,9 @@
 > [!IMPORTANT]
 > **Project status: Experimental educational lab**
 >
-> This repository is a learning project and is not production-ready. The core MCP server has been validated only in the documented isolated lab environment. Do not deploy it on deploy production networks or use it against systems you do not own or have explicit authorization to test.
+> This repository is a learning project and is not production-ready. The core MCP server has been validated only in the documented isolated lab environment. Do not deploy it on production networks or use it against systems you do not own or have explicit authorization to test.
 
-A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network. The server was validated directly with MCP Inspector. An optional Goose and Oll validated directly with MCP Inspector. An optional Goose andama integration path is documented but has not yet been independently reproduced.
+A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network. The server was validated directly with MCP Inspector. An optional Goose and Ollama integration path is documented but has not yet been independently reproduced.
 
 ## Why We Built This
 
@@ -85,7 +85,7 @@ The implementation enforces these boundaries:
 - Discovery and scanning use a fixed 120-second execution timeout.
 - Port results outside the allowlist are treated as invalid.
 - The server attempts to record every policy check and operational call as a structured JSONL audit event.
-- In the current experimental implementation, an audit-write an failure does not interrupt tool operation or weaken the separately enforced target and command restrictions.
+- In the current experimental implementation, an audit-write failure does not interrupt tool operation or weaken the separately enforced target and command restrictions.
 - MCP clients and language models cannot alter the authorized subnet, fixed commands, port allowlist, timeout, or audit behavior.
 
 The server currently uses local standard input/output (`stdio`) transport. It does not independently authenticate the MCP client; access is governed by which local processes and users are permitted to start and communicate with the server. Authentication and multi-user remote access are outside the scope of this educational version.
