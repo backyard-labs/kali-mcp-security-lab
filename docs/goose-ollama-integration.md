@@ -74,9 +74,9 @@ flowchart TD
 
 Traffic to Ollama should use the VMware NAT interface. Security-lab traffic should use the OPNsense lab interface.
 
-## Validated Environment
+## Reference Environment
 
-| Component | Validated location or value |
+| Component | Documented location or value |
 |---|---|
 | Goose | Kali Linux VM |
 | Kali MCP server | Kali Linux VM |
@@ -84,7 +84,7 @@ Traffic to Ollama should use the VMware NAT interface. Security-lab traffic shou
 | Ollama endpoint | `http://192.168.93.1:11434` |
 | Ollama native API | `http://192.168.93.1:11434/api` |
 | Ollama OpenAI-compatible API | `http://192.168.93.1:11434/v1` |
-| Validated model | `mistral:7b` |
+| Selected model | `mistral:7b` |
 | Authorized lab network | `10.10.10.0/24` |
 | OPNsense lab gateway | `10.10.10.1` |
 | MCP transport | Local standard input/output |
@@ -136,7 +136,7 @@ On Kali, display the interfaces:
 ip -brief address
 ```
 
-The validated design has:
+The documented design has:
 
 - One interface on the VMware NAT network used to reach Windows Ollama.
 - One interface on `10.10.10.0/24` used for the OPNsense security lab.
@@ -333,7 +333,7 @@ netstat -ano | findstr :11434
 
 Do not create a rule that exposes TCP port `11434` to every network.
 
-Create an inbound rule limited to the VMware NAT subnet used by Kali. For the validated environment, that subnet is `192.168.93.0/24`.
+Create an inbound rule limited to the VMware NAT subnet used by Kali. For the documented environment, that subnet is `192.168.93.0/24`.
 
 Open PowerShell as Administrator and run:
 
