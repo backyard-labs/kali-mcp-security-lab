@@ -1,0 +1,135 @@
+name: Bug report
+description: Report a reproducible problem with the server, tests, or supported workflows
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem.
+
+        Do not use this form for suspected security vulnerabilities. Report vulnerabilities privately according to [SECURITY.md](../../SECURITY.md).
+
+        GitHub issues are public. Remove credentials, tokens, personal information, private host details, operational audit records, and sensitive command output before submitting.
+
+  - type: checkboxes
+    id: preliminary-checks
+    attributes:
+      label: Preliminary checks
+      options:
+        - label: I searched the existing issues and did not find a matching report.
+          required: true
+        - label: This report does not disclose a suspected security vulnerability.
+          required: true
+        - label: I removed credentials, tokens, private host details, audit records, and other sensitive information.
+          required: true
+        - label: Any testing described here was performed only on systems and networks I own or was explicitly authorized to test.
+          required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      description: Select the component most directly related to the problem.
+      options:
+        - MCP server
+        - Target validation
+        - Nmap command execution
+        - Nmap result parsing
+        - Audit logging
+        - Automated tests
+        - MCP Inspector workflow
+        - Goose and Ollama integration
+        - Installation or dependencies
+        - Documentation
+        - Another component
+    validations:
+      required: true
+
+  - type: input
+    id: commit
+    attributes:
+      label: Affected commit or version
+      description: Provide the commit hash, branch, or other version identifier.
+      placeholder: "Example: main at abc1234"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Provide the relevant environment without disclosing sensitive infrastructure information.
+      placeholder: |
+        Operating system:
+        Python version:
+        MCP version:
+        Nmap version:
+        Client and version:
+        Installation method:
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Observed behavior
+      description: Describe what happened, including any relevant error messages.
+      placeholder: Describe the observed result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Describe what you expected to happen.
+      placeholder: Describe the expected result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest safe and repeatable sequence that demonstrates the problem.
+      placeholder: |
+        1. Activate the virtual environment.
+        2. Run ...
+        3. Invoke ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: test-results
+    attributes:
+      label: Automated test results
+      description: Provide the result of `python -m pytest -q`, if you were able to run it.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: relevant-output
+    attributes:
+      label: Relevant sanitized output
+      description: Include only output necessary to understand the problem. Remove sensitive information first.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Include any other safe information that may help reproduce or diagnose the problem.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: conduct
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct.
+          required: true
