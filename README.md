@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **Project status: Experimental educational lab**
+
 # Kali MCP Security Lab
 
 A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network. The server was validated directly with MCP Inspector and through Goose as an AI-enabled MCP client backed by a local Ollama model.
