@@ -96,7 +96,7 @@ The Windows VMware NAT address can change if the VMware network configuration ch
 
 ## Trust Boundaries
 
-The integration crosses two distinct boundaries:
+The integration crosses several distinct trust boundaries:
 
 | Boundary | Control |
 |---|---|
