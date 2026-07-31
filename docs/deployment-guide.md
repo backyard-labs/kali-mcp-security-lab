@@ -84,7 +84,7 @@ The repository is currently designed for this isolated network:
 
 The example address `10.10.10.101` may not exist in your environment. Use it only if that address belongs to a disposable system you own or are authorized to test.
 
-A more detailed explanation of the VMware and OPNsense network design will be provided in the separate network setup guide.
+The optional Goose and Ollama network topology is documented in [Goose and Ollama Integration](goose-ollama-integration.md). For the core path, confirm that Kali and every authorized target are connected only to the isolated `10.10.10.0/24` lab network.
 
 ## Minimum Requirements
 
