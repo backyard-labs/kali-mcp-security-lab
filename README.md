@@ -253,7 +253,7 @@ MCP Inspector and Goose serve different purposes:
 
 The MCP server remains the security-enforcement point. Goose and the model can request tool use, but they cannot change the authorized subnet, fixed Nmap commands, port allowlist, timeout, or audit behavior.
 
-The Goose and Ollama integration was validated manually. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the current architecture, configuration requirements, validation, audit-review, and troubleshooting guidance. Exact installation and environment-specific configuration details that still require confirmation are explicitly identified in the guide.
+The Goose and Ollama integration was documented but not yet independently reproduced. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the current architecture, configuration requirements, validation, audit-review, and troubleshooting guidance. Exact installation and environment-specific configuration details that still require confirmation are explicitly identified in the guide.
 
 ## Review the Audit Trail
 
@@ -335,7 +335,7 @@ Treat this repository as an experimental implementation of a controlled tool bou
 - Make the authorized subnet configurable through a validated environment variable.
 - Add log rotation and integrity protection.
 - Add a dry-run mode that returns the fixed command without executing it.
-- Complete the Goose and Ollama integration guide by verifying the remaining environment-specific configuration details.
+- Reproduce and record the complete Goose and Ollama validation sequence using the integration guide.
 - Expand the validated Goose and Ollama integration with additional safety-constrained workflows.
 - Add new tools only when each can be expressed as a narrow schema with an explicit allowlist.
 
