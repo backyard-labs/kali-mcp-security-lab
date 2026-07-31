@@ -1,10 +1,6 @@
 blank_issues_enabled: false
 
 contact_links:
-  - name: Report a security vulnerability
-    url: https://github.com/backyard-labs/kali-mcp-security-lab/security/advisories/new
-    about: Report suspected vulnerabilities privately. Do not disclose security details in a public issue.
-
   - name: Read the security policy
     url: https://github.com/backyard-labs/kali-mcp-security-lab/blob/main/SECURITY.md
     about: Review the supported versions, security scope, known limitations, and reporting guidance.
