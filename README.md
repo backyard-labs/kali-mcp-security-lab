@@ -15,7 +15,7 @@ This project started with a more useful question:
 
 > How can an MCP server expose real security tools while enforcing exactly which targets and operations are permitted?
 
-The answer is a deliberately narrow MCP server. It exposes useful lab operations, but it never accepts arbitrary shell commands or user-controlled Nmap flags. The authorized network, tool behavior, port list, timeouts, and audit trail are enforced in code.
+The answer is a deliberately narrow MCP server. It exposes useful lab operations, but it never accepts arbitrary shell commands or user-controlled Nmap flags. The authorized network, tool behavior, port list, and timeouts are enforced in code, while structured audit logging records operations when audit storage is available.
 
 The goal is not simply to deploy an MCP server. It is to learn how to design, test, observe, and troubleshoot a trustworthy boundary between an AI system and security tooling.
 
@@ -58,7 +58,7 @@ flowchart TD
     D -->|Rejected| E["Structured denial"]
     D -->|Authorized| F["Fixed Nmap execution"]
     F --> G["Authorized Security Lab Network<br/>(OPNsense-managed 10.10.10.0/24)"]
-    E --> H["Structured response + JSONL audit"]
+    E --> H["Structured response + audit attempt"]
     F --> H
     H --> A
     H --> B
@@ -167,7 +167,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-The first command updates the environment's package installer. The second installs MCP 2.0.0, its CLI support, `uv`, and `pytest`.
+The first command updates the environment's package installer. The second installs MCP 2.0.0 with its CLI support and compatible versions of `uv` and `pytest` from the ranges defined in `requirements.txt`.
 
 Confirm that the environment resolves the expected programs:
 
@@ -239,7 +239,7 @@ Ollama local model
   -> Kali MCP server
   -> server-side policy enforcement
   -> constrained Nmap tools
-  -> structured result and JSONL audit event
+  -> structured result and JSONL audit event when audit storage is available
 ```
 
 MCP Inspector and Goose serve different purposes:
