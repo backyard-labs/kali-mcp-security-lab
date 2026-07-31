@@ -160,7 +160,7 @@ source .venv/bin/activate
 
 The virtual environment keeps this project's Python packages separate from Kali's system-managed Python installation.
 
-Install the pinned development dependencies:
+Install the version-constrained development dependencies:
 
 ```bash
 python -m pip install --upgrade pip
