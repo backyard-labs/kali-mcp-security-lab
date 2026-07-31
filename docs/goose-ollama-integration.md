@@ -509,7 +509,7 @@ Before running a remote installer, inspect the script:
 
 ```bash
 curl -fsSL \
-  https://github.com/block/goose/releases/download/stable/download_cli.sh \
+  https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh \
   -o /tmp/goose-download-cli.sh
 ```
 
