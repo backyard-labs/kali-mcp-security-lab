@@ -18,14 +18,13 @@ The goal is not simply to deploy an MCP server. It is to learn how to design, te
 
 By completing the lab, you will practice:
 
-- Using MCP Inspector to validate tools end to end
+- How MCP Inspector acts as a test client to discover, invoke, and validate tools exposed by an MCP server
 - Why tool design is part of an AI system's security boundary
 - Allowlisting versus trying to block every unsafe option
 - Network-scope validation with Python's `ipaddress` module
 - Safe subprocess execution without a shell
 - Parsing structured Nmap XML instead of scraping terminal text
 - Testing authorization, command construction, parsing, failures, and audit behavior
-- Using MCP Inspector to validate tools end to end
 - Diagnosing a browser-specific Inspector connection failure
 - Creating a structured JSONL audit trail for real tool calls
 
@@ -98,6 +97,7 @@ The guide explains the system's behavior and design. It deliberately avoids a li
 - Kali Linux
 - Python 3 with virtual-environment support
 - Nmap
+- `jq` for formatting and filtering JSONL audit records
 - Chromium for the validated MCP Inspector workflow
 - Access to an isolated, authorized `10.10.10.0/24` lab network
 
@@ -109,7 +109,7 @@ nmap --version
 jq --version
 ```
 
-`python3 --version confirms Python is installed. nmap --version verifies that the scanner used by the bounded tools is available. jq --version confirms that the JSON-processing utility used by the audit-review examples is installed.
+`python3 --version` confirms Python is installed. `nmap --version` verifies that the scanner used by the bounded tools is available. `jq --version` confirms that the JSON-processing utility used by the audit-review examples is installed.
 
 ## Installation
 
