@@ -1,4 +1,4 @@
-# Beginner Deployment Guide
+# Deployment Guide
 
 ## Purpose
 
@@ -12,7 +12,7 @@ By the end, you will have:
 - Installed the project dependencies.
 - Run all 36 automated tests.
 - Started the MCP server through MCP Inspector.
-- Discovered and invoked all four MCP tools.
+- Discovered all four MCP tools and safely invoked those appropriate for the authorized lab environment.
 - Confirmed that an authorized target is accepted.
 - Confirmed that an unauthorized target is rejected.
 - Performed an optional authorized lab scan.
