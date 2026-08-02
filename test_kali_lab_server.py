@@ -1,5 +1,7 @@
-import pytest
 import subprocess
+
+import pytest
+
 import kali_lab_server as server
 from kali_lab_server import normalize_authorized_host, parse_open_ports
 
@@ -77,6 +79,8 @@ def test_parse_open_ports_returns_empty_list_when_none_are_open():
     </nmaprun>"""
 
     assert parse_open_ports(xml) == []
+
+
 def test_normalize_authorized_host_accepts_valid_in_scope_host():
     assert normalize_authorized_host("10.10.10.101") == "10.10.10.101"
 
@@ -90,8 +94,10 @@ def test_normalize_authorized_host_strips_whitespace():
     [
         (
             "10.10.10.0/24",
-            "Rejected target: scan_common_ports accepts one IPv4 host, "
-            "not a subnet or CIDR target.",
+            (
+                "Rejected target: scan_common_ports accepts one IPv4 host, "
+                "not a subnet or CIDR target."
+            ),
         ),
         (
             "192.168.93.1",
@@ -123,6 +129,8 @@ def test_normalize_authorized_host_rejects_invalid_targets(
         normalize_authorized_host(target)
 
     assert str(exc_info.value) == expected_message
+
+
 def test_scan_common_ports_returns_structured_results(monkeypatch):
     xml = """<nmaprun>
     <host>
@@ -401,9 +409,7 @@ def test_discover_hosts_uses_fixed_command(monkeypatch):
             "Fixed Nmap host discovery; no user options accepted"
         ),
         "exit_code": 0,
-        "stdout": (
-            "Nmap scan report for 10.10.10.101\nHost is up."
-        ),
+        "stdout": "Nmap scan report for 10.10.10.101\nHost is up.",
         "stderr": "",
     }
 
@@ -437,9 +443,7 @@ def test_discover_hosts_rejects_target_without_running_nmap(monkeypatch):
     assert result == {
         "authorized": False,
         "target": "192.168.93.0/24",
-        "error": (
-            "Rejected target: Target must be inside 10.10.10.0/24."
-        ),
+        "error": "Rejected target: Target must be inside 10.10.10.0/24.",
     }
 
 
