@@ -3,9 +3,16 @@
 > [!IMPORTANT]
 > **Project status: Experimental educational lab**
 >
-> This repository is a learning project and is not production-ready. The core MCP server has been validated only in the documented isolated lab environment. Do not deploy it on production networks or use it against systems you do not own or have explicit authorization to test.
+> This repository is a learning project and is not production-ready. The MCP server and documented client workflows have been validated only in the isolated lab environment described in this repository. Do not deploy it on production networks or use it against systems you do not own or have explicit authorization to test.
 
-A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network. The server was validated directly with MCP Inspector. An optional Goose and Ollama integration path is documented but has not yet been independently reproduced.
+A learning-focused project for building a safety-constrained Model Context Protocol (MCP) server that exposes selected Kali Linux and Nmap capabilities inside an authorized security lab network.
+
+The server has been validated through two client paths:
+
+- Direct protocol and tool testing with MCP Inspector
+- AI-enabled MCP client testing with Goose backed by a Windows-hosted Ollama model
+
+Both paths remain subject to the same server-side authorization and command restrictions.
 
 ## Why We Built This
 
@@ -25,6 +32,7 @@ By completing the lab, you will practice:
 
 - How MCP Inspector acts as a test client to discover, invoke, and validate tools exposed by an MCP server
 - How to configure an Ollama-backed Goose agent to connect to the MCP server
+- How an AI-enabled MCP client selects tools from conversational requests
 - Why tool design is part of an AI system's security boundary
 - Allowlisting versus trying to block every unsafe option
 - Network-scope validation with Python's `ipaddress` module
@@ -64,10 +72,10 @@ flowchart TD
     H --> B
 ```
 
-The two documented client paths serve different purposes:
+The two validated client paths serve different purposes:
 
 - MCP Inspector provides direct inspection and testing of MCP tool schemas, arguments, responses, and protocol behavior.
-- Goose provides an optional AI-enabled MCP client that can interpret a conversational request and select an appropriate exposed tool.
+- Goose provides an AI-enabled MCP client that can interpret a conversational request and select an appropriate exposed tool.
 - Ollama supplies the local language model used by Goose. Ollama itself is not the MCP client.
 
 The critical design decision is that the MCP server is the enforcement point. Natural-language instructions can guide an agent, but only server-side controls determine what actually runs.
@@ -96,52 +104,80 @@ Use this project only on systems you own or are explicitly authorized to test.
 
 ```text
 .
-├── kali_lab_server.py              # MCP tools and safety enforcement
-├── test_kali_lab_server.py         # Unit tests for policy, parsing, and execution
-├── test_audit_logging.py           # Isolated audit-behavior tests
-├── test_mcp_integration.py         # MCP protocol integration tests
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.yml
+│   │   ├── config.yml
+│   │   ├── documentation.yml
+│   │   └── feature_request.yml
+│   ├── workflows/
+│   │   └── ci.yml
+│   └── pull_request_template.md
 ├── docs/
-│   ├── deployment-guide.md         # Installation and core MCP validation
-│   ├── goose-ollama-integration.md # Goose and Ollama setup and validation
-│   ├── learning-journey.md         # Build milestones and reasoning
-│   └── troubleshooting.md          # Inspector/browser diagnosis
-├── requirements.txt
+│   ├── deployment-guide.md
+│   ├── goose-ollama-integration.md
+│   ├── learning-journey.md
+│   └── troubleshooting.md
 ├── .gitignore
-└── LICENSE
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── SECURITY.md
+├── kali_lab_server.py
+├── requirements.txt
+├── test_audit_logging.py
+├── test_kali_lab_server.py
+└── test_mcp_integration.py
 ```
 
 The repository supports two learning paths:
 
 1. **Core path:** Install the server, run the automated tests, and validate all four tools directly with MCP Inspector.
-2. **Optional advanced path:** Configure Goose as an AI-enabled MCP client backed by a local Ollama model, then perform and record the staged validation sequence.
+2. **Advanced path:** Configure Goose as an AI-enabled MCP client backed by a local Ollama model, then perform the staged validation sequence against the same constrained MCP server.
 
 See the [Deployment Guide](docs/deployment-guide.md) for complete Kali installation, testing, MCP Inspector validation, audit review, and shutdown instructions.
 
-The core path teaches the MCP protocol and security boundary without requiring an AI agent. The optional path is designed to demonstrate that conversational tool selection remains subject to the same server-side controls.
+The core path teaches the MCP protocol and security boundary without requiring an AI agent. The advanced path demonstrates that conversational tool selection remains subject to the same server-side controls.
 
-The documentation focuses on the security decisions, data flow, and important implementation patterns rather than explaining every Python statement individually. A guided code walkthrough will connect the major functions to the controls and tests that verify them.
+The documentation focuses on the security decisions, data flow, and important implementation patterns rather than explaining every Python statement individually. The supporting guides connect the major functions to the controls and tests that verify them.
 
-The repository documents the validated MCP Inspector path and an optional Goose and Ollama integration procedure. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for its architecture, installation, staged validation, audit review, and troubleshooting guidance.
+See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the validated AI-enabled client architecture, installation, configuration, staged testing, audit review, shutdown, resume, and troubleshooting procedures.
 
 ## Prerequisites
+
+### Core MCP Inspector path
 
 - Kali Linux
 - Python 3 with virtual-environment support
 - Nmap
 - `jq` for formatting and filtering JSONL audit records
+- Node.js, npm, and `npx`
 - Chromium for the validated MCP Inspector workflow
 - Access to an isolated, authorized `10.10.10.0/24` lab network
-- Goose and a reachable Ollama installation for the optional AI-enabled client workflow
 
-Check the main system dependencies:
+### Goose and Ollama path
+
+In addition to the core prerequisites:
+
+- Goose installed on Kali
+- A reachable Ollama installation
+- A compatible local Ollama model
+- Network connectivity between Kali and the Ollama host
+- Host firewall rules restricted to the required Ollama connection
+
+Check the main Kali dependencies:
 
 ```bash
 python3 --version
 nmap --version
 jq --version
+node --version
+npm --version
+npx --version
 ```
 
-`python3 --version` confirms Python is installed. `nmap --version` verifies that the scanner used by the bounded tools is available. `jq --version` confirms that the JSON-processing utility used by the audit-review examples is installed.
+`python3 --version` confirms Python is installed. `nmap --version` verifies that the scanner used by the bounded tools is available. `jq --version` confirms that the JSON-processing utility used by the audit-review examples is installed. Node.js, npm, and `npx` are required for MCP Inspector.
 
 ## Installation
 
@@ -207,7 +243,7 @@ The tests cover:
 
 No live network scan is required for the automated suite; operational execution is mocked where appropriate.
 
-The 36 automated tests validate the Python implementation and MCP protocol behavior. The automated tests do not validate the external Goose and Ollama integration.
+The 36 automated tests validate the Python implementation and MCP protocol behavior. They do not replace manual validation of MCP Inspector, Goose, Ollama, networking, routing, or live authorized lab operations.
 
 ## Use MCP Inspector
 
@@ -223,18 +259,20 @@ Use the tools in this order:
 
 1. Run `show_scope_policy` and confirm `10.10.10.0/24`.
 2. Run `validate_target` with a known lab address.
-3. Run `discover_hosts` with `10.10.10.0/24`.
-4. Select one known authorized host other than Kali itself.
-5. Run `scan_common_ports` against that host.
-6. Review the tool result and corresponding audit event.
+3. Run `validate_target` with an address outside the authorized network and confirm rejection.
+4. Run `discover_hosts` with `10.10.10.0/24`.
+5. Select one known authorized host other than Kali itself.
+6. Run `scan_common_ports` against that host.
+7. Submit a subnet or out-of-scope target to `scan_common_ports` and confirm rejection.
+8. Review the tool results and corresponding audit events.
 
 Stop Inspector with `Ctrl+C`. That ends the Inspector and MCP server processes and invalidates the temporary token for that instance.
 
 ## Use the Server With Goose and Ollama
 
-An optional advanced workflow uses Goose as the AI-enabled MCP client and Ollama for local language-model inference.
+The advanced workflow uses Goose as the AI-enabled MCP client and Ollama for local language-model inference.
 
-The intended integration path is:
+The validated integration path is:
 
 ```text
 Ollama local model
@@ -253,7 +291,18 @@ MCP Inspector and Goose serve different purposes:
 
 The MCP server remains the security-enforcement point. Goose and the model can request tool use, but they cannot change the authorized subnet, fixed Nmap commands, port allowlist, timeout, or audit behavior.
 
-This integration is documented but has not yet been independently reproduced. See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the complete procedure. Record the actual versions, configuration values, and test results when performing the validation.
+The Goose and Ollama workflow was reproduced successfully in the documented isolated lab environment. The validation confirmed:
+
+- Kali could reach the Windows-hosted Ollama API.
+- Goose could use the configured Ollama model.
+- Goose could start the Kali MCP server as a local `stdio` extension.
+- Goose discovered all four constrained MCP tools.
+- Authorized targets were accepted.
+- Unauthorized and invalid targets were rejected.
+- Authorized host discovery and common-port scanning remained subject to server-side controls.
+- JSONL audit evidence was reviewed for allowed and rejected operations.
+
+See [Goose and Ollama Integration](docs/goose-ollama-integration.md) for the complete installation and validation procedure.
 
 ## Review the Audit Trail
 
@@ -285,7 +334,19 @@ In the current experimental implementation, an audit-storage failure does not st
 
 ## Validation Status
 
-The current experimental milestone validated the direct MCP Inspector path:
+### Automated validation
+
+The complete automated test suite passed:
+
+```text
+36 passed
+```
+
+The suite validates policy enforcement, target handling, fixed command construction, structured result parsing, error behavior, audit behavior, and MCP protocol integration.
+
+### MCP Inspector validation
+
+The direct MCP Inspector path was validated:
 
 ```text
 MCP Inspector
@@ -296,11 +357,65 @@ MCP Inspector
   -> JSONL audit event when audit storage is available
 ```
 
-MCP Inspector was used to inspect and invoke the tools directly.
+MCP Inspector was used to discover and invoke all four tools directly.
 
-During direct MCP Inspector validation, a controlled common-port scan of example host `10.10.10.101` tested the fixed 14-port allowlist. Learners must use an authorized target that actually exists in their own isolated `10.10.10.0/24` lab. The result and exact enforced command were recorded in the operational audit log during validation.
+During controlled validation, a common-port scan of authorized example host `10.10.10.101` tested the fixed 14-port allowlist. Learners must replace this example with an authorized target that exists in their own isolated `10.10.10.0/24` lab. The result and exact enforced command were recorded in the operational audit log.
 
-The Goose and Ollama end-to-end path is documented but remains pending reproduction and recorded validation. Until that sequence succeeds, it must not be described as a validated client path.
+### Goose and Ollama validation
+
+The Goose and Ollama end-to-end path was also reproduced successfully:
+
+```text
+User request
+  -> Goose on Kali
+  -> Windows-hosted Ollama model
+  -> Kali MCP server
+  -> server-side authorization
+  -> constrained tool execution or rejection
+  -> structured response
+  -> JSONL audit attempt
+```
+
+The recorded validation environment was:
+
+| Component | Validated value |
+|---|---|
+| Validation date | `2026-08-02` |
+| Kali distribution | `Kali GNU/Linux Rolling` |
+| Kali version | `2026.2` |
+| Python | `3.13.12` |
+| Goose | `1.44.0` |
+| Ollama | `0.30.8` |
+| Ollama model | `mistral:7b` |
+| Authorized network | `10.10.10.0/24` |
+| Authorized live-scan target | `10.10.10.101` |
+| Automated tests | `36 passed` |
+| MCP tools discovered | All four |
+| Unauthorized target rejection | Confirmed |
+| Audit evidence review | Confirmed |
+
+The tested Kali working directory was:
+
+```text
+/home/ali/mcp-lab/kali-tool-server
+```
+
+The validated MCP Python interpreter and server paths were:
+
+```text
+/home/ali/mcp-lab/kali-tool-server/.venv/bin/python
+/home/ali/mcp-lab/kali-tool-server/kali_lab_server.py
+```
+
+The audit log resolved to:
+
+```text
+/home/ali/mcp-lab/kali-tool-server/kali_lab_audit.jsonl
+```
+
+The files tested on Kali were stored in a regular project directory rather than a Git clone. Therefore, the validation was not associated with a recorded Git commit. The validated test files were subsequently verified and uploaded to this repository.
+
+Validation in this specific environment does not guarantee that every version, model, operating system, network topology, or future dependency combination will behave identically. Follow the documented staged checks and record the actual values observed in your own environment.
 
 ## The Most Useful Troubleshooting Lesson
 
@@ -316,18 +431,71 @@ That sequence matters because it demonstrates evidence-based troubleshooting:
 
 See [Troubleshooting MCP Inspector](docs/troubleshooting.md) for the diagnostic commands and reasoning.
 
+## Documentation
+
+Use these guides for the complete procedures:
+
+- [Deployment Guide](docs/deployment-guide.md) — Kali installation, automated tests, MCP Inspector validation, audit review, shutdown, and resume
+- [Goose and Ollama Integration](docs/goose-ollama-integration.md) — Goose installation, Ollama connectivity, MCP extension configuration, staged validation, and troubleshooting
+- [Troubleshooting](docs/troubleshooting.md) — MCP Inspector and client-connection diagnosis
+- [Learning Journey](docs/learning-journey.md) — project milestones, design decisions, and lessons learned
+- [Contributing](CONTRIBUTING.md) — contribution workflow and project expectations
+- [Security Policy](SECURITY.md) — security limitations and vulnerability-reporting guidance
+
+## Current Limitations
+
+This project remains an experimental educational lab rather than a production security service.
+
+Current limitations include:
+
+- The authorized network is hard-coded as `10.10.10.0/24`.
+- The server uses local `stdio` transport.
+- The server does not independently authenticate MCP clients.
+- Remote and multi-user MCP deployment is not supported.
+- Audit-write failures are fail-open.
+- Audit rotation, retention, and integrity protection are not implemented.
+- The validated Goose and Ollama result applies to the recorded lab environment and versions.
+- The server has not undergone an independent production security assessment.
+- The project does not provide exploitation, credential, persistence, or general shell capabilities.
+
+The presence of automated tests and a GitHub Actions workflow does not mean the application is production-ready. These controls help detect regressions in the educational implementation.
+
 ## Where to Go Next
 
-Treat this repository as an experimental implementation of a controlled tool boundary. The MCP server has been validated directly with MCP Inspector. The documented Goose and Ollama path remains pending end-to-end reproduction. Possible extensions include:
+For learners using this repository:
 
-- Make the authorized subnet configurable through a validated environment variable.
-- Add log rotation and integrity protection.
-- Add a dry-run mode that returns the fixed command without executing it.
-- Reproduce and record the complete Goose and Ollama validation sequence using the integration guide.
-- After successful reproduction, evaluate additional safety-constrained Goose workflows.
+- Follow the core deployment guide and validate the server with MCP Inspector.
+- Follow the Goose and Ollama guide to reproduce the AI-enabled MCP client workflow.
+- Record the actual software versions, network values, paths, and validation results from your environment.
+- Compare client responses with server-generated audit evidence.
+- Experiment only inside an isolated, explicitly authorized lab.
 - Add new tools only when each can be expressed as a narrow schema with an explicit allowlist.
 
-Avoid turning the project into a general shell bridge. Its educational value comes from keeping authority narrow, visible, testable, and auditable.
+Possible future engineering improvements include:
+
+- Make the authorized subnet configurable through a strictly validated configuration mechanism.
+- Add log rotation, retention, and integrity protection.
+- Add a dry-run mode that returns the fixed command without executing it.
+- Expand negative, malformed-input, and resource-exhaustion tests.
+- Strengthen dependency, lint, and security automation.
+- Add controlled packaging and versioned releases.
+- Evaluate additional safety-constrained Goose workflows.
+- Perform an independent security review before considering any production use.
+
+Avoid turning the project into a general shell bridge. Its educational and security value comes from keeping authority narrow, visible, testable, and auditable.
+
+## Responsible Use
+
+This project must be used only:
+
+- In an isolated lab environment
+- Against systems you own
+- Against systems for which you have explicit authorization
+- For education, testing, and defensive security research
+
+Do not use this project to scan, probe, disrupt, exploit, or access third-party systems without permission.
+
+The user is responsible for complying with applicable laws, organizational policies, and authorization boundaries.
 
 ## License
 
