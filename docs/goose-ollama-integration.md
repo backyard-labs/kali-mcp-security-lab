@@ -20,6 +20,8 @@ By the end, you will have:
 
 This is the optional advanced path. Complete the core [Deployment Guide](deployment-guide.md) and validate the server with MCP Inspector before connecting an AI-enabled client.
 
+The complete Goose and Ollama workflow documented here was reproduced successfully in the reference lab environment recorded in [Validation Record](#31-validation-record).
+
 > [!IMPORTANT]
 > This repository is an experimental educational lab. Use it only in an isolated environment and only against systems you own or are explicitly authorized to test. Do not expose the MCP server or Ollama API to the public Internet.
 
@@ -694,11 +696,11 @@ The remainder of the examples use this placeholder:
 
 Replace it with the actual output of `pwd`.
 
-Use a repository path without spaces. Some Goose releases may parse command-line extension paths incorrectly when spaces are present.
+Use a project path without spaces. Some Goose releases may parse command-line extension paths incorrectly when spaces are present.
 
 ## 12. Test the Direct MCP Launch Command
 
-From the repository root, activate the environment:
+From the project root, activate the environment:
 
 ```bash
 source .venv/bin/activate
@@ -801,7 +803,7 @@ kali_lab_audit.jsonl
 
 Its location therefore depends on the working directory from which Goose launches the MCP server.
 
-For the documented workflow, start Goose from the repository root:
+For the documented workflow, start Goose from the project root:
 
 ```bash
 cd ~/kali-mcp-security-lab
@@ -815,7 +817,7 @@ For a deterministic absolute audit path, you may configure this extension enviro
 KALI_LAB_AUDIT_LOG=/home/your-username/kali-mcp-security-lab/kali_lab_audit.jsonl
 ```
 
-Replace the example path with the actual repository path.
+Replace the example path with the actual project path.
 
 This changes only the audit-file location. It does not change the authorization boundary or Nmap policy.
 
@@ -823,7 +825,7 @@ The audit file is intentionally ignored by Git because it can contain lab addres
 
 ## 15. Confirm the Extension Starts
 
-Start Goose from the repository:
+Start Goose from the project:
 
 ```bash
 cd ~/kali-mcp-security-lab
@@ -928,7 +930,7 @@ A rejected request is a successful security test. It demonstrates that the serve
 
 Keep Goose running and open a second Kali terminal.
 
-Enter the repository:
+Enter the project directory:
 
 ```bash
 cd ~/kali-mcp-security-lab
@@ -971,7 +973,7 @@ Policy and target-validation events should have:
 "command": null
 ```
 
-If the audit file is not in the repository, search the current user’s likely Goose working locations without scanning the whole filesystem:
+If the audit file is not in the project directory, search the current user’s likely Goose working locations without scanning the whole filesystem:
 
 ```bash
 find "$HOME" -maxdepth 4 \
@@ -1165,7 +1167,7 @@ Even if the model incorrectly claims it can perform the request, the four MCP to
 
 ## 22. Review Operational Audit Evidence
 
-In the second Kali terminal:
+In the second Kali terminal, enter the project directory:
 
 ```bash
 cd ~/kali-mcp-security-lab
@@ -1271,8 +1273,8 @@ The advanced path introduces additional risks that do not exist in the direct In
 | Model reports an action it did not perform | Check the MCP tool call and audit evidence |
 | Model attempts an unsafe target | Rely on server-side validation |
 | Goose extension path points to the wrong Python | Use the project’s absolute `.venv/bin/python` path |
-| Relative audit path creates logs elsewhere | Start Goose from the repository or set an absolute audit path |
-| Local user modifies the MCP server | Review Git status and rerun all tests |
+| Relative audit path creates logs elsewhere | Start Goose from the project directory or set an absolute audit path |
+| Local user modifies the MCP server | Review the source changes and rerun all tests |
 | Prompt injection influences Goose | Keep all essential authorization controls in server code |
 | Small local model uses tools unreliably | Validate each stage and use explicit tool-directed prompts |
 
@@ -1360,7 +1362,7 @@ grep -B 1 '^def \(show_scope_policy\|validate_target\|discover_hosts\|scan_commo
   kali_lab_server.py
 ```
 
-Confirm Goose is using the same repository copy you tested.
+Confirm Goose is using the same project copy you tested.
 
 ### Goose discovers tools but does not invoke them
 
@@ -1512,7 +1514,7 @@ Invoke-RestMethod http://localhost:11434/api/version
 
 ### On Kali
 
-Enter the repository:
+Enter the project directory:
 
 ```bash
 cd ~/kali-mcp-security-lab
@@ -1536,7 +1538,7 @@ Rerun the automated tests:
 python -m pytest -q
 ```
 
-Start Goose from the repository:
+Start Goose from the project directory:
 
 ```bash
 goose session
@@ -1546,7 +1548,9 @@ Ask Goose to display the scope policy before requesting a live operation.
 
 ## 30. Update the Components Safely
 
-### Update the Kali repository
+### Update a Git-cloned Kali project
+
+If your Kali project was created with `git clone`, enter it and inspect its status:
 
 ```bash
 cd ~/kali-mcp-security-lab
@@ -1558,6 +1562,8 @@ If the working tree is clean:
 ```bash
 git pull --ff-only
 ```
+
+If the project directory is not a Git clone, `git status` and `git pull` will not work. Obtain a fresh Git clone or carefully replace the files from a trusted repository source, then rerun the complete validation sequence.
 
 Activate the environment:
 
@@ -1607,36 +1613,47 @@ Component updates can alter interfaces or behavior. Revalidate the integration i
 
 ## 31. Validation Record
 
-Complete this table after performing the integration:
+The Goose and Ollama integration was reproduced successfully in the following environment:
 
-| Item | Recorded value |
+| Item | Validated value |
 |---|---|
-| Validation date | _Record date_ |
-| Kali version | _Record value_ |
-| Repository commit | _Record `git rev-parse HEAD`_ |
-| Python version | _Record value_ |
-| Goose version | _Record value_ |
+| Validation date | `2026-08-02` |
+| Kali distribution | `Kali GNU/Linux Rolling` |
+| Kali version | `2026.2` |
+| Tested Kali working directory | `/home/your-username/mcp-lab/kali-tool-server` |
+| Repository commit | Not recorded. The files tested on Kali were copied into a regular project directory rather than cloned from GitHub, so the directory was not associated with a specific Git commit. |
+| Python version | `3.13.12` |
+| Goose version | `1.44.0` |
 | Goose installation method | Official Linux CLI installer |
 | Goose provider | Ollama |
 | Goose model identifier | `mistral:7b` |
-| Ollama version | _Record value_ |
+| Ollama version | `0.30.8` |
 | Ollama host | `http://192.168.93.1:11434` |
 | MCP extension name | `kali-mcp-security-lab` |
 | MCP transport | Local stdio |
-| MCP Python path | _Record absolute path_ |
-| MCP server path | _Record absolute path_ |
-| Audit-log path | _Record absolute path_ |
+| MCP Python path | `/home/your-username/mcp-lab/kali-tool-server/.venv/bin/python` |
+| MCP server path | `/home/your-username/mcp-lab/kali-tool-server/kali_lab_server.py` |
+| Audit-log path | `/home/your-username/mcp-lab/kali-tool-server/kali_lab_audit.jsonl` |
 | Authorized network | `10.10.10.0/24` |
-| Authorized live-scan target | _Record only if used_ |
+| Authorized live-scan target | `10.10.10.101` |
 | Automated-test result | `36 passed` |
-| Four tools discovered | Yes / No |
-| Unauthorized target rejected | Yes / No |
-| Audit evidence reviewed | Yes / No |
+| Four tools discovered | Yes |
+| Unauthorized target rejected | Yes |
+| Audit evidence reviewed | Yes |
 
-Useful commands:
+The validated files were subsequently verified and uploaded to this repository. Because the tested Kali directory did not contain Git metadata, the validation cannot be tied retroactively to a particular Git commit.
+
+This does not invalidate the test result. It means only that the exact commit identifier was not recorded at the time of validation.
+
+For future reproductions performed from a Git clone, record the commit before testing:
 
 ```bash
 git rev-parse HEAD
+```
+
+Record the remaining software versions with:
+
+```bash
 python --version
 goose --version
 ```
@@ -1647,17 +1664,28 @@ On Windows:
 ollama --version
 ```
 
-Do not commit private host information, operational audit logs, tokens, or sensitive environment details.
+Also resolve and record the audit-log location:
+
+```bash
+readlink -f kali_lab_audit.jsonl
+```
+
+Validation in this specific environment does not guarantee that every version, model, operating system, network topology, or future dependency combination will behave identically. Follow the staged checks in this guide and record the actual values observed in your own environment.
+
+Do not commit private host information, operational audit logs, tokens, credentials, or sensitive environment details.
 
 ## 32. Completion Checklist
 
+The reference validation recorded above completed the end-to-end integration successfully. Use this checklist when reproducing the workflow in another environment or after changing a component.
+
 ### Core server
 
-- [ ] The repository is installed on Kali.
+- [ ] The project is installed on Kali.
 - [ ] The project virtual environment is active.
 - [ ] All 36 automated tests pass.
 - [ ] MCP Inspector previously discovered all four tools.
 - [ ] The fixed authorization boundary is understood.
+- [ ] The exact source version or Git commit is recorded when available.
 
 ### Network
 
@@ -1703,6 +1731,7 @@ Do not commit private host information, operational audit logs, tokens, or sensi
 - [ ] An unauthorized address is rejected without Nmap execution.
 - [ ] Goose’s tool trace is reviewed.
 - [ ] The corresponding audit evidence is reviewed.
+- [ ] The absolute audit-log path is recorded.
 
 ### Optional operations
 
@@ -1739,8 +1768,9 @@ After completing this guide, you should be able to explain:
 13. Why an unauthorized request is a successful security test.
 14. Why Goose’s conversational response is not sufficient operational evidence.
 15. Why audit absence is inconclusive in the current fail-open implementation.
+16. Why recording the tested source version or Git commit improves reproducibility.
 
-The completed path is:
+The validated path is:
 
 ```text
 User request
