@@ -397,20 +397,20 @@ The recorded validation environment was:
 The tested Kali working directory was:
 
 ```text
-/home/ali/mcp-lab/kali-tool-server
+/home/your-username/mcp-lab/kali-tool-server
 ```
 
 The validated MCP Python interpreter and server paths were:
 
 ```text
-/home/ali/mcp-lab/kali-tool-server/.venv/bin/python
-/home/ali/mcp-lab/kali-tool-server/kali_lab_server.py
+/home/your-username/mcp-lab/kali-tool-server/.venv/bin/python
+/home/your-username/mcp-lab/kali-tool-server/kali_lab_server.py
 ```
 
 The audit log resolved to:
 
 ```text
-/home/ali/mcp-lab/kali-tool-server/kali_lab_audit.jsonl
+/home/your-username/mcp-lab/kali-tool-server/kali_lab_audit.jsonl
 ```
 
 The files tested on Kali were stored in a regular project directory rather than a Git clone. Therefore, the validation was not associated with a recorded Git commit. The validated test files were subsequently verified and uploaded to this repository.
